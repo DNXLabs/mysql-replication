@@ -92,7 +92,8 @@ class BinLogPacketWrapper(object):
                  only_schemas,
                  ignored_schemas,
                  freeze_schema,
-                 fail_on_table_metadata_unavailable):
+                 fail_on_table_metadata_unavailable,
+                 file_name_binlog): #DNX-GET-LINE
         # -1 because we ignore the ok byte
         self.read_bytes = 0
         # Used when we want to override a value in the data buffer
@@ -117,6 +118,8 @@ class BinLogPacketWrapper(object):
         # position of the next event
         self.log_pos = unpack[5]
         self.flags = unpack[6]
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = self.log_pos #DNX-GET-LINE
 
         # MySQL 5.6 and more if binlog-checksum = CRC32
         if use_checksum:
@@ -131,6 +134,8 @@ class BinLogPacketWrapper(object):
             return
         self.event = event_class(self, event_size_without_header, table_map,
                                  ctl_connection,
+                                 file_name_binlog=self.file_name_binlog, #DNX-GET-LINE
+                                 line_binlog=self.line_binlog, #DNX-GET-LINE
                                  only_tables=only_tables,
                                  ignored_tables=ignored_tables,
                                  only_schemas=only_schemas,

@@ -334,6 +334,7 @@ class BinLogStreamReader(object):
 
             prelude += struct.pack('<I', self.__server_id)
             prelude += self.log_file.encode()
+            self.file_name_binlog = self.log_file.encode()  #DNX-GET-LINE
         else:
             # Format for mysql packet master_auto_position
             #
@@ -406,6 +407,7 @@ class BinLogStreamReader(object):
             prelude += struct.pack('<I', gtid_set.encoded_length)
             # encoded_data
             prelude += gtid_set.encoded()
+            self.file_name_binlog = gtid_set.encoded()  #DNX-GET-LINE
 
         if pymysql.__version__ < "0.6":
             self._stream_connection.wfile.write(prelude)
@@ -452,11 +454,14 @@ class BinLogStreamReader(object):
                                                self.__only_schemas,
                                                self.__ignored_schemas,
                                                self.__freeze_schema,
-                                               self.__fail_on_table_metadata_unavailable)
+                                               self.__fail_on_table_metadata_unavailable,
+                                               self.file_name_binlog) #DNX-GET-LINE
 
             if binlog_event.event_type == ROTATE_EVENT:
                 self.log_pos = binlog_event.event.position
-                self.log_file = binlog_event.event.next_binlog
+                self.log_file = binlog_event.event.next_binlog #DNX-GET-LINE
+                self.line_binlog = self.log_pos  #DNX-GET-LINE
+
                 # Table Id in binlog are NOT persistent in MySQL - they are in-memory identifiers
                 # that means that when MySQL master restarts, it will reuse same table id for different tables
                 # which will cause errors for us since our in-memory map will try to decode row data with
@@ -469,6 +474,7 @@ class BinLogStreamReader(object):
                 self.table_map = {}
             elif binlog_event.log_pos:
                 self.log_pos = binlog_event.log_pos
+                self.line_binlog = self.log_pos  #DNX-GET-LINE
 
             # This check must not occur before clearing the ``table_map`` as a
             # result of a RotateEvent.

@@ -17,14 +17,17 @@ from .table import Table
 from .bitmap import BitCount, BitGet
 
 class RowsEvent(BinLogEvent):
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, **kwargs):
-        super(RowsEvent, self).__init__(from_packet, event_size, table_map,
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
+        super(RowsEvent, self).__init__(from_packet, event_size, table_map, file_name_binlog, line_binlog, #DNX-GET-LINE
                                         ctl_connection, **kwargs)
         self.__rows = None
         self.__only_tables = kwargs["only_tables"]
         self.__ignored_tables = kwargs["ignored_tables"]
         self.__only_schemas = kwargs["only_schemas"]
         self.__ignored_schemas = kwargs["ignored_schemas"]
+
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = line_binlog #DNX-GET-LINE
 
         #Header
         self.table_id = self._read_table_id()
@@ -434,9 +437,12 @@ class DeleteRowsEvent(RowsEvent):
     For each row you have a hash with a single key: values which contain the data of the removed line.
     """
 
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, **kwargs):
-        super(DeleteRowsEvent, self).__init__(from_packet, event_size,
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
+        super(DeleteRowsEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
                                               table_map, ctl_connection, **kwargs)
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = line_binlog #DNX-GET-LINE
+
         if self._processed:
             self.columns_present_bitmap = self.packet.read(
                 (self.number_of_columns + 7) / 8)
@@ -462,9 +468,13 @@ class WriteRowsEvent(RowsEvent):
     For each row you have a hash with a single key: values which contain the data of the new line.
     """
 
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, **kwargs):
-        super(WriteRowsEvent, self).__init__(from_packet, event_size,
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
+        super(WriteRowsEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
                                              table_map, ctl_connection, **kwargs)
+
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = line_binlog #DNX-GET-LINE
+
         if self._processed:
             self.columns_present_bitmap = self.packet.read(
                 (self.number_of_columns + 7) / 8)
@@ -495,9 +505,13 @@ class UpdateRowsEvent(RowsEvent):
     http://dev.mysql.com/doc/refman/5.6/en/replication-options-binary-log.html#sysvar_binlog_row_image
     """
 
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, **kwargs):
-        super(UpdateRowsEvent, self).__init__(from_packet, event_size,
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
+        super(UpdateRowsEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
                                               table_map, ctl_connection, **kwargs)
+
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = line_binlog #DNX-GET-LINE
+
         if self._processed:
             #Body
             self.columns_present_bitmap = self.packet.read(
@@ -531,14 +545,17 @@ class TableMapEvent(BinLogEvent):
     An end user of the lib should have no usage of this
     """
 
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, **kwargs):
-        super(TableMapEvent, self).__init__(from_packet, event_size,
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
+        super(TableMapEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
                                             table_map, ctl_connection, **kwargs)
         self.__only_tables = kwargs["only_tables"]
         self.__ignored_tables = kwargs["ignored_tables"]
         self.__only_schemas = kwargs["only_schemas"]
         self.__ignored_schemas = kwargs["ignored_schemas"]
         self.__freeze_schema = kwargs["freeze_schema"]
+
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = line_binlog #DNX-GET-LINE
 
         # Post-Header
         self.table_id = self._read_table_id()

@@ -8,7 +8,7 @@ from pymysql.util import byte2int, int2byte
 
 
 class BinLogEvent(object):
-    def __init__(self, from_packet, event_size, table_map, ctl_connection,
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog,  #DNX-GET-LINE
                  only_tables=None,
                  ignored_tables=None,
                  only_schemas=None,
@@ -26,6 +26,10 @@ class BinLogEvent(object):
         # the event will be skipped
         self._processed = True
         self.complete = True
+
+        # DNX-GET-LINE
+        self.file_name_binLog = file_name_binlog  #DNX-GET-LINE
+        self.line_binlog = line_binlog  #DNX-GET-LINE
 
     def _read_table_id(self):
         # Table ID is 6 byte
@@ -85,11 +89,14 @@ class RotateEvent(BinLogEvent):
         position: Position inside next binlog
         next_binlog: Name of next binlog file
     """
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, **kwargs):
+    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
         super(RotateEvent, self).__init__(from_packet, event_size, table_map,
-                                          ctl_connection, **kwargs)
+                                          ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
         self.position = struct.unpack('<Q', self.packet.read(8))[0]
         self.next_binlog = self.packet.read(event_size - 8).decode()
+
+        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
+        self.line_binlog = line_binlog #DNX-GET-LINE
 
     def dump(self):
         print("=== %s ===" % (self.__class__.__name__))
