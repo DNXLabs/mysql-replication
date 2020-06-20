@@ -18,8 +18,7 @@ from .bitmap import BitCount, BitGet
 
 class RowsEvent(BinLogEvent):
     def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
-        super(RowsEvent, self).__init__(from_packet, event_size, table_map, file_name_binlog, line_binlog, #DNX-GET-LINE
-                                        ctl_connection, **kwargs)
+        super(RowsEvent, self).__init__(from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
         self.__rows = None
         self.__only_tables = kwargs["only_tables"]
         self.__ignored_tables = kwargs["ignored_tables"]
@@ -438,8 +437,7 @@ class DeleteRowsEvent(RowsEvent):
     """
 
     def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
-        super(DeleteRowsEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
-                                              table_map, ctl_connection, **kwargs)
+        super(DeleteRowsEvent, self).__init__(from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
         self.file_name_binlog = file_name_binlog #DNX-GET-LINE
         self.line_binlog = line_binlog #DNX-GET-LINE
 
@@ -469,8 +467,7 @@ class WriteRowsEvent(RowsEvent):
     """
 
     def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
-        super(WriteRowsEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
-                                             table_map, ctl_connection, **kwargs)
+        super(WriteRowsEvent, self).__init__(from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
 
         self.file_name_binlog = file_name_binlog #DNX-GET-LINE
         self.line_binlog = line_binlog #DNX-GET-LINE
@@ -506,8 +503,7 @@ class UpdateRowsEvent(RowsEvent):
     """
 
     def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
-        super(UpdateRowsEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
-                                              table_map, ctl_connection, **kwargs)
+        super(UpdateRowsEvent, self).__init__(from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
 
         self.file_name_binlog = file_name_binlog #DNX-GET-LINE
         self.line_binlog = line_binlog #DNX-GET-LINE
@@ -546,8 +542,7 @@ class TableMapEvent(BinLogEvent):
     """
 
     def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
-        super(TableMapEvent, self).__init__(from_packet, event_size, file_name_binlog, line_binlog, #DNX-GET-LINE
-                                            table_map, ctl_connection, **kwargs)
+        super(TableMapEvent, self).__init__(from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
         self.__only_tables = kwargs["only_tables"]
         self.__ignored_tables = kwargs["ignored_tables"]
         self.__only_schemas = kwargs["only_schemas"]
