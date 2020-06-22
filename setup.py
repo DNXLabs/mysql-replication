@@ -37,11 +37,11 @@ class TestCommand(Command):
 version = "0.21"
 
 setup(
-    name="mysql-replication",
+    name="dnx-mysql-replication",
     version=version,
-    url="https://github.com/noplay/python-mysql-replication",
-    author="Julien Duponchelle",
-    author_email="julien@duponchelle.info",
+    url="https://github.com/DNXLabs/dnx-mysql-replication",
+    author="DNX Solutions",
+    author_email="contact@dnx.solutions",
     description=("Pure Python Implementation of MySQL replication protocol "
                  "build on top of PyMYSQL."),
     license="Apache 2",
