@@ -8,13 +8,21 @@ from pymysql.util import byte2int, int2byte
 
 
 class BinLogEvent(object):
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog,  #DNX-GET-LINE
-                 only_tables=None,
-                 ignored_tables=None,
-                 only_schemas=None,
-                 ignored_schemas=None,
-                 freeze_schema=False,
-                 fail_on_table_metadata_unavailable=False):
+    def __init__(
+        self,
+        from_packet,
+        event_size,
+        table_map,
+        ctl_connection,
+        file_name_binlog,  # DNX-GET-LINE
+        line_binlog,  # DNX-GET-LINE
+        only_tables=None,
+        ignored_tables=None,
+        only_schemas=None,
+        ignored_schemas=None,
+        freeze_schema=False,
+        fail_on_table_metadata_unavailable=False
+    ):
         self.packet = from_packet
         self.table_map = table_map
         self.event_type = self.packet.event_type
@@ -27,9 +35,8 @@ class BinLogEvent(object):
         self._processed = True
         self.complete = True
 
-        # DNX-GET-LINE
-        self.file_name_binLog = file_name_binlog  #DNX-GET-LINE
-        self.line_binlog = line_binlog  #DNX-GET-LINE
+        self.file_name_binLog = file_name_binlog  # DNX-GET-LINE
+        self.line_binlog = line_binlog  # DNX-GET-LINE
 
     def _read_table_id(self):
         # Table ID is 6 byte
@@ -89,13 +96,30 @@ class RotateEvent(BinLogEvent):
         position: Position inside next binlog
         next_binlog: Name of next binlog file
     """
-    def __init__(self, from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs): #DNX-GET-LINE
-        super(RotateEvent, self).__init__(from_packet, event_size, table_map, ctl_connection, file_name_binlog, line_binlog, **kwargs) #DNX-GET-LINE
+    def __init__(
+        self,
+        from_packet,
+        event_size,
+        table_map,
+        ctl_connection,
+        file_name_binlog,  # DNX-GET-LINE
+        line_binlog,  # DNX-GET-LINE
+        **kwargs
+    ):
+        super(RotateEvent, self).__init__(
+            from_packet,
+            event_size,
+            table_map,
+            ctl_connection,
+            file_name_binlog,  # DNX-GET-LINE
+            line_binlog,  # DNX-GET-LINE
+            **kwargs
+        )
         self.position = struct.unpack('<Q', self.packet.read(8))[0]
         self.next_binlog = self.packet.read(event_size - 8).decode()
 
-        self.file_name_binlog = file_name_binlog #DNX-GET-LINE
-        self.line_binlog = line_binlog #DNX-GET-LINE
+        self.file_name_binlog = file_name_binlog  # DNX-GET-LINE
+        self.line_binlog = line_binlog  # DNX-GET-LINE
 
     def dump(self):
         print("=== %s ===" % (self.__class__.__name__))
